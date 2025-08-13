@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agent Personnel</title>
+</head>
+<body>
+    <h1>Bienvenue dans ton agent personnel</h1>
+    <p>Salaire mensuel : {{ salary }} €</p>
+    <p>Charges fixes : {{ charges }} €</p>
+    <p>Budget disponible : <strong>{{ budget }} €</strong></p>
+
+    <h2>Agenda du {{ today }}</h2>
+    <ul>
+        {% for event in events_today %}
+            <li>{{ event }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Bilan du {{ yesterday }}</h2>
+    <ul>
+        {% for event in events_yesterday %}
+            <li>{{ event }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('configure') }}">Configurer les données</a>
+</body>
+</html>
