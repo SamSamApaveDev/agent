@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: agent-personnel
+    name: agent-dashboard
     env: python
     buildCommand: ""
     startCommand: "python app.py"

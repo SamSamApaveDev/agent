@@ -1,46 +1,40 @@
 from flask import Flask, render_template, request, redirect, url_for
-from datetime import datetime, timedelta
 import os
 
 app = Flask(__name__)
 
-# Données utilisateur
+# Sample data
 user_data = {
-    "salary": 0,
-    "charges": []
+    "salary": 3000,
+    "expenses": {
+        "Food": 450,
+        "Media": 120,
+        "Bank": 300,
+        "Clothes": 180
+    }
 }
 
 @app.route('/')
 def index():
-    today = datetime.now().date()
-    yesterday = today - timedelta(days=1)
-
-    total_charges = sum(user_data["charges"])
-    budget_available = user_data["salary"] - total_charges
-
-    events_today = ["(Connexion à Google Calendar requise)"]
-    events_yesterday = ["(Connexion à Google Calendar requise)"]
-
-    return render_template('index.html',
+    total_expenses = sum(user_data["expenses"].values())
+    budget_available = user_data["salary"] - total_expenses
+    return render_template("index.html",
                            salary=user_data["salary"],
-                           charges=user_data["charges"],
-                           budget=budget_available,
-                           today=today,
-                           yesterday=yesterday,
-                           events_today=events_today,
-                           events_yesterday=events_yesterday)
+                           expenses=user_data["expenses"],
+                           total_expenses=total_expenses,
+                           budget=budget_available)
 
-@app.route('/configure', methods=['GET', 'POST'])
-def configure():
-    if request.method == 'POST':
-        salary = float(request.form.get('salary', 0))
-        charges_raw = request.form.get('charges', '')
-        charges = [float(c.strip()) for c in charges_raw.split(',') if c.strip().isdigit()]
-        user_data["salary"] = salary
-        user_data["charges"] = charges
-        return redirect(url_for('index'))
-    return render_template('configure.html')
+@app.route('/update', methods=['POST'])
+def update():
+    for category in user_data["expenses"]:
+        value = request.form.get(category)
+        if value:
+            try:
+                user_data["expenses"][category] = float(value)
+            except ValueError:
+                pass
+    return redirect(url_for('index'))
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
