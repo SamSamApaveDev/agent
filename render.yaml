@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: agent-dashboard
+    name: budget-dashboard
     env: python
     buildCommand: ""
     startCommand: "python app.py"

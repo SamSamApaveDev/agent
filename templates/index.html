@@ -2,61 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Agent Personnel - Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Budget Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { background-color: #f8f9fa; }
-        .card { margin-bottom: 20px; }
-        .center-text { text-align: center; font-size: 1.5rem; font-weight: bold; }
-    </style>
 </head>
 <body>
-<div class="container py-4">
-    <h2 class="text-center mb-4">Mon Budget</h2>
-    <div class="row">
-        <div class="col-md-6">
-            <canvas id="expenseChart"></canvas>
+    <div class="container">
+        <h1>Mon Budget</h1>
+        <div class="card">
+            <h2>Budget restant</h2>
+            <div id="remaining">{{ remaining }} €</div>
         </div>
-        <div class="col-md-6">
-            <div class="card p-3">
-                <div class="center-text">Budget Disponible</div>
-                <div class="center-text text-success">{{ budget }} €</div>
-                <hr>
-                <div><strong>Salaire :</strong> {{ salary }} €</div>
-                <div><strong>Dépenses :</strong> {{ total_expenses }} €</div>
-                <hr>
-                <form method="POST" action="{{ url_for('update') }}">
-                    {% for category, value in expenses.items() %}
-                        <div class="mb-2">
-                            <label>{{ category }}</label>
-                            <input type="number" step="0.01" name="{{ category }}" value="{{ value }}" class="form-control">
-                        </div>
+
+        <canvas id="expenseChart" width="300" height="300"></canvas>
+
+        <div class="expense-form">
+            <h3>Ajouter une dépense</h3>
+            <form id="expenseForm">
+                <select name="category">
+                    {% for cat in data.expenses %}
+                    <option value="{{ cat }}">{{ cat }}</option>
                     {% endfor %}
-                    <button type="submit" class="btn btn-primary mt-2">Mettre à jour</button>
-                </form>
-            </div>
+                </select>
+                <input type="number" name="amount" step="0.01" placeholder="Montant">
+                <button type="submit">Ajouter</button>
+            </form>
         </div>
     </div>
-</div>
-<script>
-    const ctx = document.getElementById('expenseChart').getContext('2d');
-    const expenseChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: {{ expenses.keys()|list }},
-            datasets: [{
-                data: {{ expenses.values()|list }},
-                backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545']
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'bottom' }
+
+    <script>
+        const ctx = document.getElementById('expenseChart').getContext('2d');
+        const expenseChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ data.expenses.keys()|list }},
+                datasets: [{
+                    data: {{ data.expenses.values()|list }},
+                    backgroundColor: ['#7F00FF', '#00C9A7', '#FF6B6B', '#FFD93D', '#3C3C3C', '#5F27CD']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
             }
-        }
-    });
-</script>
+        });
+
+        document.getElementById("expenseForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch("/add_expense", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("remaining").innerText = data.remaining + " €";
+                expenseChart.data.datasets[0].data = Object.values(data.expenses);
+                expenseChart.update();
+            });
+        });
+    </script>
 </body>
 </html>

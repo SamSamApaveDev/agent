@@ -1,0 +1,66 @@
+body {
+    font-family: 'Inter', 'Poppins', sans-serif;
+    background-color: #f5f7fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #3C3C3C;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#remaining {
+    font-size: 2em;
+    color: #00C9A7;
+    margin-top: 10px;
+}
+
+.expense-form {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.expense-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.expense-form select,
+.expense-form input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.expense-form button {
+    background-color: #7F00FF;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.expense-form button:hover {
+    background-color: #5F27CD;
+}
