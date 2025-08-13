@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime, timedelta
+import os
 
 app = Flask(__name__)
 
+# Données utilisateur
 user_data = {
     "salary": 0,
     "charges": []
@@ -31,16 +33,14 @@ def index():
 @app.route('/configure', methods=['GET', 'POST'])
 def configure():
     if request.method == 'POST':
-        try:
-            salary = float(request.form.get('salary', 0))
-            charges_raw = request.form.get('charges', '')
-            charges = [float(c.strip()) for c in charges_raw.split(',') if c.strip()]
-            user_data["salary"] = salary
-            user_data["charges"] = charges
-            return redirect(url_for('index'))
-        except ValueError:
-            return "Erreur dans les données saisies", 400
+        salary = float(request.form.get('salary', 0))
+        charges_raw = request.form.get('charges', '')
+        charges = [float(c.strip()) for c in charges_raw.split(',') if c.strip().isdigit()]
+        user_data["salary"] = salary
+        user_data["charges"] = charges
+        return redirect(url_for('index'))
     return render_template('configure.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)

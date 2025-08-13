@@ -1,40 +1,35 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Agent Personnel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-<div class="container py-5">
-    <h1 class="mb-4 text-center">Agent Personnel</h1>
-    <div class="card mb-4">
+<div class="container py-4">
+    <h1 class="mb-4">Agent Personnel</h1>
+    <div class="card mb-3">
         <div class="card-body">
-            <h5 class="card-title">Budget</h5>
-            <p>Salaire mensuel : <strong>{{ salary }} €</strong></p>
-            <p>Charges fixes : <strong>{{ charges }} €</strong></p>
-            <p>Budget disponible : <strong class="text-success">{{ budget }} €</strong></p>
-            <a href="{{ url_for('configure') }}" class="btn btn-primary">Modifier les données</a>
+            <p><strong>Salaire mensuel :</strong> {{ salary }} €</p>
+            <p><strong>Charges fixes :</strong> {{ charges }} €</p>
+            <p><strong>Budget disponible :</strong> <span class="text-success">{{ budget }} €</span></p>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-            <h4>Agenda du {{ today }}</h4>
-            <ul class="list-group">
-                {% for event in events_today %}
-                    <li class="list-group-item">{{ event }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="col-md-6">
-            <h4>Bilan du {{ yesterday }}</h4>
-            <ul class="list-group">
-                {% for event in events_yesterday %}
-                    <li class="list-group-item">{{ event }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
+
+    <h2>Agenda du {{ today }}</h2>
+    <ul class="list-group mb-4">
+        {% for event in events_today %}
+            <li class="list-group-item">{{ event }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Bilan du {{ yesterday }}</h2>
+    <ul class="list-group mb-4">
+        {% for event in events_yesterday %}
+            <li class="list-group-item">{{ event }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('configure') }}" class="btn btn-primary">Configurer les données</a>
 </div>
 </body>
 </html>
