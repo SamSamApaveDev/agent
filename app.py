@@ -34,11 +34,11 @@ def configure():
     if request.method == 'POST':
         salary = float(request.form.get('salary', 0))
         charges_raw = request.form.get('charges', '')
-        charges = [float(c.strip()) for c in charges_raw.split(',') if c.strip().isdigit()]
+        charges = [float(c.strip()) for c in charges_raw.split(',') if c.strip().replace('.', '', 1).isdigit()]
         user_data["salary"] = salary
         user_data["charges"] = charges
         return redirect(url_for('index'))
     return render_template('configure.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000)
